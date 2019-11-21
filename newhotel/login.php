@@ -2,25 +2,26 @@
 	//Start session
 	session_start();
 	
+	
 	//Connect to mysqli server
 	require "reservation/connect.php";
 	
 	//Function to sanitize values received from the form. Prevents SQL injection
-	function clean($str) {
+	function clean($str, $link) {
 		$str = @trim($str);
 		if(get_magic_quotes_gpc()) {
 			$str = stripslashes($str);
 		}
-		return mysqli_real_escape_string($str);
+		return mysqli_real_escape_string($link, $str);
 	}
 	
 	//Sanitize the POST values
-	$login = clean($_POST['user']);
-	$password = clean($_POST['password']);
+	$login = clean($_POST['user'],$link);
+	$password = clean($_POST['password'],$link);
 	
 	//Create query
 	$qry="SELECT * FROM user WHERE username='$login' AND password='$password'";
-	$result=mysqli_query($qry);
+	$result=mysqli_query($link, $qry);
 	//while($row = mysqli_fetch_array($result))
 //  {
 //  $level=$row['position'];
